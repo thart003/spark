@@ -69,6 +69,12 @@ all_data.select(
     col("daily_prices.low").alias("low"),
     col(daily_prices.close").alias("close"),
     col("daily_prices.volume").alias("volume"),
+    col("daily_prices.afterHours")/alias("afterHours"),
+    col(daily_prices.preMarket").alias("preMarket"),
+    ).where(col("high").isNotNull()).writeTo('taylorhart.stock_prices').using
+
+    job = Job(glueContext)
+    job.init(args["JOB_NAME"], args)
 
 
 
