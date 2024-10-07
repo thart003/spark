@@ -66,6 +66,8 @@ df.select(
      ).writeTo(output_table).using("iceberg").partitionBy("date").overwritePartition
     df.printSchema
 
+    job = JOB(glueContext)
+    job.init(args["JOB_NAME"], args)
 
 
 
