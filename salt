@@ -1,0 +1,5 @@
+df.withColumn("salt_random_column", (rand * n).cast(IntegerType))
+  .groupBy(groupByFields, "salt_random_column")
+  .agg(aggFields)
+  .groupBy(groupByFields)
+  .agg(aggFields)
