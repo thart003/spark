@@ -13,10 +13,10 @@ glueContext = GlueContext(spark.sparkContext)
 spark - glueContext.spark_session
 
 df = spark.sql("SELECT * FROM taylorhart.nba_game_details")
-df.repartition(100).sortWithinPartitions()
-    .writeTo(output_table) \
-    .tableProperty("write.spark.fanout.enabled", "true") \
-    .createOrReplace()
+(df.repartition(100).sortWithinPartitions("game_id", "team_id", "player_id")
+    .writeTo(output_table) 
+    .tableProperty("write.spark.fanout.enabled", "true") 
+    .createOrReplace())
 
 job = Job(glueContext)
 job.init(args["JOB_NAME"], args)
