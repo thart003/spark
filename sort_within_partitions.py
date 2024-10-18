@@ -13,7 +13,8 @@ glueContext = GlueContext(spark.sparkContext)
 spark - glueContext.spark_session
 
 df = spark.sql("SELECT * FROM taylorhart.nba_game_details")
-df.repartition(100).writeTo(output_table) \
+df.repartition(100).sortWithinPartitions()
+    .writeTo(output_table) \
     .tableProperty("write.spark.fanout.enabled", "true") \
     .createOrReplace()
 
