@@ -30,10 +30,26 @@ def consecutive_season(seasons, stat, cutoff):
             max_consecutive = consecutive
         return max_consecutive
                     
+consecutive_stat udf = udf(lambda seasons, stat, cutoff: consecutive_seasons(seasons, stat, cutoff), IntegerType())
+
+df = (df
+      .withColumn("consecutive_20pt_seasons",
+                  consecutive_stat_udf(col("seasons"), lit("pts"), lit(20))
+      .withColumn("consecutive_10reb_seasons",
+                  consecutive_stat_udf(col("seasons"), lit("reb"), lit(10))
+      .withColumn("consecutive_5ast_seasons",
+                  consecutive_stat_udf(col("seasons"), lit("ast"), lit(5))
+                 )
+
+df.writeTo(output_table) \
+     .tableProperty("write.spark.fanout.enabled", "true") \
+     .createOrReplace()
+
+job = Job(glueContext)
+job.init(args["JOB_NAME"], args)
 
 
-
-
+                  
 
 
 
