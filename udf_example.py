@@ -26,19 +26,24 @@ def consecutive_season(seasons, stat, cutoff):
                 ('consecutive_10reb_seasons', 'reb', 10),
                 ('consecutive_5ast_seasons', 'ast', 5)
         ]
-        
-        for season in seasons:
-            if season[stat] >= cutoff:
-                 consecutive += 1
-            else:
-                if consecutive > max_consecutive:
-                    max_consecutive = consecutive
-                consecutive = 0
-        if consecutive > max_consecutive:
-            max_consecutive = consecutive
-        return max_consecutive
+        for config in configurations:
+            stat = config[1]
+            cutoff = config[2]
+            consecutive = 0
+            max_consecutive = 0
+            for season in seasons:
+                if season[stat] >= cutoff:
+                    consecutive += 1
+                else:
+                    if consecutive > max_consecutive:
+                        max_consecutive = consecutive
+                    consecutive = 0
+           if consecutive > max_consecutive:
+                max_consecutive = consecutive
+           consecutive_map[config[0]] = max_consecutive
+        return consecutive_map
                     
-consecutive_stat udf = udf(lambda seasons, stat, cutoff: consecutive_seasons(seasons, stat, cutoff), IntegerType())
+consecutive_stat udf = udf(lambda seasons: consecutive_seasons(seasons, stat, cutoff), IntegerType())
 
 df = (df
       .withColumn("consecutive_20pt_seasons",
