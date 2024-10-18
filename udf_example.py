@@ -19,6 +19,14 @@ df = spark.sql("SELECT * FROM taylorhart.nba_players WHERE surrent_season = 2002
 def consecutive_season(seasons, stat, cutoff):
         consecutive = 0
         max_consecutive = 0
+        consecutive_map = {}
+
+        configurations = [
+                ('consecutive_20pt_seasons', 'pts', 20),
+                ('consecutive_10reb_seasons', 'reb', 10),
+                ('consecutive_5ast_seasons', 'ast', 5)
+        ]
+        
         for season in seasons:
             if season[stat] >= cutoff:
                  consecutive += 1
