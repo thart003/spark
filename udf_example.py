@@ -14,9 +14,22 @@ output_table = args['output_table']
 glueContext = GlueContext(spark.sparkContext)
 spark = glueContext.spark_session
 
-df = spark.sql("SELECT * FROM taylorhart.nba_players WHERE surrent_season = '2002')
+df = spark.sql("SELECT * FROM taylorhart.nba_players WHERE surrent_season = 2002")
 
-
+def consecutive_season(seasons, stat, cutoff):
+        consecutive = 0
+        max_consecutive = 0
+        for season in seasons:
+            if season[stat] >= cutoff:
+                 consecutive += 1
+            else:
+                if consecutive > max_consecutive:
+                    max_consecutive = consecutive
+                consecutive = 0
+        if consecutive > max_consecutive:
+            max_consecutive = consecutive
+        return max_consecutive
+                    
 
 
 
