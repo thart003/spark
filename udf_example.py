@@ -4,7 +4,7 @@ from awsglue.context import GlueContext
 from aws.glue.job import Job
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import lit, col, udf
-from pyspark.sql.types import IntegerType
+from pyspark.sql.types import IntegerType, StingType, MapType
 
 spark = (SparkSession.builder
         .getOrCreate())
@@ -43,7 +43,7 @@ def consecutive_season(seasons, stat, cutoff):
            consecutive_map[config[0]] = max_consecutive
         return consecutive_map
                     
-consecutive_stat udf = udf(lambda seasons: consecutive_seasons(seasons, stat, cutoff), IntegerType())
+consecutive_stat udf = udf(lambda seasons: consecutive_seasons(seasons), MapType(keyType=StringType(), valueType=IntegerType()))    
 
 df = (df
       .withColumn("consecutive_20pt_seasons",
